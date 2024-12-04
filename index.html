@@ -121,7 +121,7 @@
 
 
           const data = JSON.parse(event.data);
-          console.log('Message reçu:', data);
+          //console.log('Message reçu:', data);
 
           document.getElementById('temps_de_cycle').textContent = data.temps_de_cycle;
           document.getElementById('position').textContent = data.position;
@@ -130,7 +130,7 @@
           document.getElementById('redemarrage').textContent = data.restarts;
 
           if (data.dataTable2) {
-            console.log('data.dataTable2:', data.dataTable2);
+            //console.log('data.dataTable2:', data.dataTable2);
             console.log('data.dataTable2.length:', data.dataTable2.length);
             // Séparer les données en deux tableaux distincts pour température et position
             const tempArray = data.dataTable2.map(entry => parseFloat(entry.temperature));
