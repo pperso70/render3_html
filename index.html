@@ -4,7 +4,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Affichage des Données avec Chart.js</title>
+  <title>Render Mvd</title>
+  <link rel="icon"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M14 4l-1-2L2 5l1 2L14 4zM1 7l4.5 1L7 13H5v2h6v-2H9L7.5 8 13 6.5' fill='%232563eb' stroke='%231e40af' stroke-width='0.8' stroke-linejoin='round'/%3E%3C/svg%3E"
+        type="image/svg+xml">
+    <link rel="alternate icon"
+        href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAABSElEQVR4nGNgoBAw4pL4X8/KwFDPylDPysxQz8QE5NcxMNSzMhHWhE0zsgH1rPX1rAyX61kZLtezMpyvZ2X4D8L1rAyP61kZzhPShGzz/3pWhssMDAwM9awMl+pZGR7XszL8h+J6VoaL9awMZ/BpxrD5fz0rw1UGBob/9awMl+tZGZ7UszL8g+J6VobL9awMp3FpxrAZKngFqPgJkVEKkz9fz8pwCptmrDYDFV+tZ2V4Ws/K8BeL/OV6VoYT2DQzYvgZqPBaPSvDs3pWhn84NC/DphnDgHpWhusMDAxP61kZ/uKQv1TPynAUXTMjhp/rWRluMDAwPEPXjEUe7GcGhgcMDNgBTnWsBoZnDAz/kcMYxK5jNUC1H6qwnpXhGa6YR9bMyPCMgQEj3PFpZoTRDM8YGLDSBS7NVEkZAE0YvYa4p4p3AAAAAElFTkSuQmCC"
+        type="image/png">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -14,34 +20,28 @@
       box-sizing: border-box;
     }
 
-    canvas {
-      margin-top: 20px;
-      display: block;
-      max-width: 100%;
-    }
-
     button {
       margin: 10px;
       padding: 10px 20px;
       font-size: 16px;
     }
 
-    .container {
-      display: flex;
-      /* Utilisation de flexbox */
-      justify-content: center;
-      /* Espacement autour des éléments */
-      align-items: center;
-      /* Alignement vertical centré */
-      margin-top: 10px;
-      /* Espacement réduit entre le conteneur et l'élément précédent */
+    .chart-container {
+      max-width: 600px;
+      /* Largeur maximale du conteneur */
+      width: 100%;
+      /* Le conteneur occupe 100% de la largeur disponible */
+      margin: 0 auto;
+      /* Centre horizontalement */
     }
 
-    .chart-container {
-      width: 330px;
-      height: 250px;
-      margin: 0 20px;
-      border: 1px solid #ccc;
+    canvas {
+      display: block;
+      /* Évite les espaces blancs autour du canvas */
+      max-width: 100%;
+      /* Assure que le canvas ne dépasse pas la largeur du conteneur */
+      height: auto;
+      /* Maintient les proportions */
     }
 
     #cameraImage {
@@ -71,7 +71,7 @@
 
   <div id="data">
     <h2 style="display:inline;">Données du système</h2>
-    <p style="display:inline; margin-left: 10px;">render3</p>
+    <p style="display:inline; margin-left: 10px;">Render essai</p>
     <p>T Cycle: <span id="temps_de_cycle">--</span></p>
     <p>Position: <span id="position">--</span></p>
     <p>Température radiateur: <span id="temperature">--</span>°C</p>
@@ -79,12 +79,10 @@
     <p> redemarrage: <span id="redemarrage">--</span></p>
   </div>
 
-  <div class="container">
-    <div class="chart-container">
-      <!-- Canvas pour afficher le graphique Chart.js -->
-      <canvas id="myChart" width="400" height="400"></canvas>
-    </div>
-    <img id="cameraImage" alt="Image de la caméra">
+  <img id="cameraImage" alt="Image de la caméra">
+
+  <div class="chart-container">
+    <canvas id="myChart" width="600" height="600"></canvas>
   </div>
 
   <!-- Boutons pour ajuster le début et la fin de l'affichage -->
@@ -102,9 +100,9 @@
     var globalBackgroundColor = 'rgba(54, 162, 235, 0.5)';  // Couleur par défaut (bleue)
 
     window.onload = function () {
-      //socket = new WebSocket('wss://mvdch.glitch.me');
-      socket = new WebSocket('wss://render-1-60mw.onrender.com'); //render3
-      
+      socket = new WebSocket('wss://render-1-60mw.onrender.com');
+      //socket = new WebSocket('wss://mvdtab.glitch.me');
+
       socket.onopen = function (e) {
         sendCommand('démarre');
         console.log("Connecté au WebSocket");
@@ -130,7 +128,6 @@
           document.getElementById('redemarrage').textContent = data.restarts;
 
           if (data.dataTable2) {
-            //console.log('data.dataTable2:', data.dataTable2);
             console.log('data.dataTable2.length:', data.dataTable2.length);
             // Séparer les données en deux tableaux distincts pour température et position
             const tempArray = data.dataTable2.map(entry => parseFloat(entry.temperature));
@@ -149,7 +146,7 @@
 
               myChart.data.labels = timeArray;
               // Mise à jour des données de température
-              myChart.data.datasets[0].data = tempArray;      
+              myChart.data.datasets[0].data = tempArray;
               myChart.data.datasets[0].borderColor = globalBorderColor;
               myChart.data.datasets[0].backgroundColor = globalBackgroundColor;
               // Mise à jour des données de position
